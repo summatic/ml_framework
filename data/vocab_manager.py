@@ -1,13 +1,13 @@
 from collections import defaultdict
 
 
-predefined_index = {'UNK': 0, 'PAD': 1, 'SOS': 2, 'EOS': 3}
+predefined_index = {'UNK': 1, 'PAD': 0, 'SOS': 2, 'EOS': 3}
 
 
 class VocabManager:
 
     def __init__(self, hparams):
-        self.vocab_params = hparams['vocabs']
+        self.vocab_params = hparams
 
         self.vocab_counts = None
         self.vocab_index = None
@@ -27,7 +27,7 @@ class VocabManager:
 
     def save_vocab_counts(self):
         """Save all built vocabs"""
-        file_path = self.vocab_params['count_file_path']
+        file_path = self.vocab_params.vocab_count_path
 
         f = open(file_path, 'w')
         for vocab, count in self.vocab_counts.items():
@@ -36,8 +36,8 @@ class VocabManager:
 
     def load_vocab_counts(self):
         """Load vocabs and its' count which count if bigger than min_count"""
-        file_path = self.vocab_params['count_file_path']
-        min_count = self.vocab_params['min_count']
+        file_path = self.vocab_params.vocab_count_path
+        min_count = self.vocab_params.min_count
         vocab_counts = {}
 
         f = open(file_path, 'r')
@@ -63,7 +63,7 @@ class VocabManager:
         self.vocab_index = vocab_index
 
     def save_vocab_index(self):
-        file_path = self.vocab_params['index_file_path']
+        file_path = self.vocab_params.vocab_index_path
 
         f = open(file_path, 'w')
         for vocab, index in self.vocab_index.items():
@@ -72,7 +72,7 @@ class VocabManager:
 
     def load_vocab_index(self):
         """Load vocab index"""
-        file_path = self.vocab_params['index_file_path']
+        file_path = self.vocab_params.vocab_index_path
         vocab_index = {}
 
         f = open(file_path, 'r')

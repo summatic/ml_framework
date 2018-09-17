@@ -1,45 +1,54 @@
+import os
 from unittest import TestCase
 from data.data_manager import DataManager, LabeledPairDataManager
+from hparams import load_hparams
 
-hparams = {
-    'vocabs': {
-        'count_file_path': 'test_files/temp_count_file.txt',
-        'index_file_path': 'test_files/temp_index_file.txt',
-        'min_count': 2},
-    'data': {
-        'train_file_path': 'test/files/datasets/train.txt',
-        'test_file_path': 'test/files/datasets/test.txt',
-        'val_file_path': 'test/files/datasets/val.txt'
-    },
-    'model': {
-        'input_length': 10
-    }
-}
+abspath = os.path.abspath(os.path.dirname(__file__))
+hparams = load_hparams(os.path.join(abspath, '../data/test_files/datasets/unlabeled_pair/'))
 
 
 class TestDataManager(TestCase):
     def setUp(self):
-        self.data_manager = DataManager(hparams)
+        self.sess = None
+        self.data_manager = DataManager(hparams=hparams)
 
     def tearDown(self):
         del self.data_manager
 
     def test_indexing(self):
-        sentences = '1 4 6 8 2 3'
+        sentence = '1 4 6 8 2 3'
         answer = [2, 4, 0, 0, 0, 5, 6, 1, 1, 3]
 
-        result = self.data_manager.indexing(sentences)
+        result = self.data_manager.indexing(sentence)
+
         self.assertListEqual(answer, result)
 
 
 class TestLabeledPairDataManager(TestCase):
     def setUp(self):
-        self.data_manager = LabeledPairDataManager(hparams)
+        self.sess = None
+        self.data_manager = LabeledPairDataManager(hparams=hparams, sess=self.sess)
 
     def tearDown(self):
         del self.data_manager
 
-    def test_apply(self):
+    def test__read_file(self):
+        answers = [([2, 0, 0, 0, 0, 1, 1, 1, 1, 3], [2, 0, 6, 5, 4, 1, 1, 1, 1, 3], 0),
+                   ([2, 0, 6, 5, 4, 1, 1, 1, 1, 3], [2, 4, 0, 4, 5, 1, 1, 1, 1, 3], 1)]
+        results = self.data_manager._read_file(self.data_manager.hparams['data']['test'])
+
+        for idx, (answer, result) in enumerate(zip(answers, results)):
+            with self.subTest(idx=idx):
+                self.assertTupleEqual(answer, result)
+
+    def test_make_instance(self):
+        sent0 = '1 4 6 8 2 3'
+        sent1 = '1 4 6 8 2 3'
+
+        answer = {'sent0': [2, 4, 0, 0, 0, 5, 6, 1, 1, 3],
+                  'sent1': [2, 4, 0, 0, 0, 5, 6, 1, 1, 3]}
+        result = self.data_manager.make_instance(sent0=sent0, sent1=sent1)
+        self.assertDictEqual(answer, result)
 
 
 if __name__ == '__main__':

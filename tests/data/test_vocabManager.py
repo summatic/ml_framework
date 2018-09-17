@@ -1,19 +1,15 @@
 import os
 from unittest import TestCase
 from data.vocab_manager import VocabManager
+from hparams import load_hparams
 
-
+abspath = os.path.abspath(os.path.dirname(__file__))
+hparams = load_hparams(os.path.join(abspath, '../data/test_files/datasets/unlabeled_pair/'))
 temp_path = 'temp'
 
 
 class TestVocabManager(TestCase):
     def setUp(self):
-        hparams = {
-            'vocabs': {
-                'count_file_path': 'test_files/temp_count_file.txt',
-                'index_file_path': 'test_files/temp_index_file.txt',
-                'min_count': 2}}
-
         self.vocab_manager = VocabManager(hparams=hparams)
 
     def tearDown(self):
@@ -32,7 +28,7 @@ class TestVocabManager(TestCase):
         self.vocab_manager.vocab_counts = {'1': 2, '2': 2, '3': 2, '4': 1, '5': 2, '6': 1}
         self.vocab_manager.save_vocab_counts()
 
-        isfile = os.path.isfile(self.vocab_manager.vocab_params['count_file_path'])
+        isfile = os.path.isfile(self.vocab_manager.vocab_params.vocab_count_path)
         self.assertTrue(isfile)
 
     def test_load_vocab_counts(self):
@@ -52,7 +48,7 @@ class TestVocabManager(TestCase):
         self.vocab_manager.index_vocabs()
         self.vocab_manager.save_vocab_index()
 
-        isfile = os.path.isfile(self.vocab_manager.vocab_params['index_file_path'])
+        isfile = os.path.isfile(self.vocab_manager.vocab_params.vocab_index_path)
         self.assertTrue(isfile)
 
     def test_load_vocab_index(self):
