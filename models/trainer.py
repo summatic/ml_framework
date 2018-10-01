@@ -23,6 +23,7 @@ class Trainer:
 
         self.logger = get_logger('trainer', os.path.join(self.hparams.base_dir, 'trainer_log.log'))
         self.summary_writer = tf.summary.FileWriter(self.hparams.save_dir)
+        self.summary_writer.add_graph(tf.get_default_graph())
         self.saver = tf.train.Saver(tf.global_variables())
 
     def _log(self, loss, prev_time, epoch, global_step):
@@ -46,7 +47,7 @@ class Trainer:
         prev_time = time()
         early_stopping_metric = 0
         best_ckpt = 0
-        early_stopping_steps = 5
+        early_stopping_steps = 100
         tolerance = 0
 
         self.logger.warning('Training Start')

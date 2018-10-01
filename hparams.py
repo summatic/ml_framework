@@ -18,7 +18,7 @@ def parse_hparams():
 
     # vocab configs
     # flags.DEFINE_string('pretrained_path', base_dir + 'pretrained.npy', 'path of vocabulary count file')
-    flags.DEFINE_string('pretrained_path', None, 'path of vocabulary count file')
+    flags.DEFINE_string('pretrained_path', '', 'path of vocabulary count file')
     flags.DEFINE_string('vocab_count_path', base_dir + 'word_count.txt', 'path of vocabulary count file')
     flags.DEFINE_string('vocab_index_path', base_dir + 'word_index.txt', 'path of vocabulary index file')
     flags.DEFINE_integer('min_count', 100, 'minimum count for pruning vocab')
