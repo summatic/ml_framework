@@ -23,7 +23,7 @@ class TestIngredients(tf.test.TestCase):
                                   keep_prob=keep_prob)
         self.skipTest('')
 
-    def test_create_bidirectional_dynamic_rnn(self):  # TODO: self.assertShapeEqual(np, tensor)
+    def test_create_bidirectional_dynamic_rnn(self):
         batch_size = hparams.batch_size
         input_length = hparams.input_length
 
